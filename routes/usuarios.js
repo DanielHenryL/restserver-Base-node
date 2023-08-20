@@ -2,12 +2,17 @@ const { Router } = require('express');
 const { usuariosGet, usuariosPut, usuariosPost, usuariosDelete } = require('../controllers/usuarios');
 const { check} = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
-const { isRoleValid, emailExiste } = require('../helpers/db-validators');
+const { isRoleValid, emailExiste, existeUsuarioById } = require('../helpers/db-validators');
 const router = Router();
 
 
 router.get('/', usuariosGet );
-router.put('/:id', usuariosPut );
+router.put('/:id', [
+    check('id', 'No es un ID válido').isMongoId(),
+    check('id').custom( ( id ) => existeUsuarioById( id ) ),
+    check('rol').custom( ( rol ) => isRoleValid( rol ) ),
+    validarCampos
+], usuariosPut );
 router.post('/', [
     check('nombre', 'El nombre es obligatorio').notEmpty(), // isEmpty() -> significa que estas preguntado si esta vacio
     check('password', 'El password es obligatorio').notEmpty(),

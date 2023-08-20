@@ -17,7 +17,7 @@ const usuariosGet= ( req = request, res = response ) => {
 const usuariosPut = async( req = request, res = response ) => {
     
     const { id } = req.params;
-    const { password, google, correo, ...resto } = req.body;
+    const { _id, password, google, correo, ...resto } = req.body;
 
     if( password ){
         // Encriptar la contraseña

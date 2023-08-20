@@ -1,17 +1,17 @@
 const { response, request } = require('express');
 const Usuario = require('../models/usuario');
 const bcryptjs = require('bcryptjs');
-const usuariosGet= ( req = request, res = response ) => {
-    
-    const { q, nombre = 'No name', apikey, page="1", limit} = req.query;
+
+
+
+const usuariosGet= async( req = request, res = response ) => {
+    const { limit = 10, desde = 0 } = req.query;
+    const usuarios = await Usuario.find()
+        .skip( desde )
+        .limit( limit );
 
     res.json({
-        msg: 'get API - controlador',
-        q,
-        nombre,
-        apikey,
-        page,
-        limit
+        usuarios
     });
 }
 const usuariosPut = async( req = request, res = response ) => {
@@ -24,11 +24,9 @@ const usuariosPut = async( req = request, res = response ) => {
         const salt = bcryptjs.genSaltSync();
         resto.password = bcryptjs.hashSync( password, salt );
     }
-    const usuario = await Usuario.findByIdAndUpdate( id, resto );
-    res.json({
-        msg: 'put API - controlador',
-        usuario
-    });
+    const usuario = await Usuario.findByIdAndUpdate( id, resto, {new:true} );
+
+    res.json(usuario);
 }
 const usuariosPost= async( req = request, res = response ) => {
 

@@ -14,13 +14,20 @@ const usuariosGet= ( req = request, res = response ) => {
         limit
     });
 }
-const usuariosPut= ( req = request, res = response ) => {
+const usuariosPut = async( req = request, res = response ) => {
     
     const { id } = req.params;
+    const { password, google, correo, ...resto } = req.body;
 
+    if( password ){
+        // Encriptar la contraseña
+        const salt = bcryptjs.genSaltSync();
+        resto.password = bcryptjs.hashSync( password, salt );
+    }
+    const usuario = await Usuario.findByIdAndUpdate( id, resto );
     res.json({
         msg: 'put API - controlador',
-        id
+        usuario
     });
 }
 const usuariosPost= async( req = request, res = response ) => {

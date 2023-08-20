@@ -32,4 +32,10 @@ const UsuarioSchema = Schema({
     }
 })
 
+// quitando la contraseña y __v  de la respuesta
+UsuarioSchema.methods.toJSON = function() {
+    const { __v , password, ...usuario } = this.toObject();
+    return usuario;
+}
+
 module.exports = model( 'Usuario', UsuarioSchema );

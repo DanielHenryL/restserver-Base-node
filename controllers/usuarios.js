@@ -5,12 +5,24 @@ const bcryptjs = require('bcryptjs');
 
 
 const usuariosGet= async( req = request, res = response ) => {
-    const { limit = 10, desde = 0 } = req.query;
-    const usuarios = await Usuario.find()
-        .skip( desde )
-        .limit( limit );
+    // desestructura los query 
+    const { limit = 5, desde = 0 } = req.query;
+    // lista los usuarios con estado true
+    // const usuarios = await Usuario.find({ estado:true })
+        // .skip( desde ) // inicio del listado
+        // .limit( limit ); // cantidad que va a listar
+    // contabiliza la cantidad de usuario con estado true
+    // const total = await Usuario.countDocuments({ estado:true });
 
+    // mejorar la velocidad de respuesta, esto resolvera las promesas en simultaneo, nota: si uno falla disparará error
+    const [ total, usuarios ] = await Promise.all([
+        Usuario.countDocuments( { estado:true } ),
+        Usuario.find( { estado:true } )
+            .skip( desde )
+            .limit( limit )
+    ]);
     res.json({
+        total,
         usuarios
     });
 }

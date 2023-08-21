@@ -25,6 +25,10 @@ router.post('/', [
     check('rol').custom( ( rol ) => isRoleValid( rol ) ),
     validarCampos
 ], usuariosPost );
-router.delete('/', usuariosDelete );
+router.delete('/:id', [
+    check('id', 'No es un ID válido').isMongoId(),
+    check('id').custom( ( id ) => existeUsuarioById( id ) ),
+    validarCampos
+], usuariosDelete );
 
 module.exports = router;

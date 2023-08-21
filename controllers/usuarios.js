@@ -7,12 +7,6 @@ const bcryptjs = require('bcryptjs');
 const usuariosGet= async( req = request, res = response ) => {
     // desestructura los query 
     const { limit = 5, desde = 0 } = req.query;
-    // lista los usuarios con estado true
-    // const usuarios = await Usuario.find({ estado:true })
-        // .skip( desde ) // inicio del listado
-        // .limit( limit ); // cantidad que va a listar
-    // contabiliza la cantidad de usuario con estado true
-    // const total = await Usuario.countDocuments({ estado:true });
 
     // mejorar la velocidad de respuesta, esto resolvera las promesas en simultaneo, nota: si uno falla disparará error
     const [ total, usuarios ] = await Promise.all([
@@ -55,10 +49,16 @@ const usuariosPost= async( req = request, res = response ) => {
         usuario
     });
 }
-const usuariosDelete= ( req = request, res = response ) => {
-    res.json({
-        msg: 'delete API - controlador'
-    });
+const usuariosDelete = async( req = request, res = response ) => {
+
+    const { id } = req.params;
+    // borrar usuario de la base de datos
+    // const usuario = await Usuario.findByIdAndDelete(id);
+
+    // cambiar estado sin eleminar el usuario
+    const usuario = await Usuario.findByIdAndUpdate( id, { estado: false }, { new:true })
+
+    res.json(usuario);
 }
 
 module.exports = {

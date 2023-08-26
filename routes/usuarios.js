@@ -3,7 +3,7 @@ const { check } = require('express-validator');
 
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJwt } = require('../middlewares/validar-jwt');
-const { esAdminRole } = require('../middlewares/validar-roles');
+const { esAdminRole, tieneRole } = require('../middlewares/validar-roles');
 
 const { isRoleValid, emailExiste, existeUsuarioById } = require('../helpers/db-validators');
 const { usuariosGet, usuariosPut, usuariosPost, usuariosDelete } = require('../controllers/usuarios');
@@ -31,7 +31,8 @@ router.post('/', [
 ], usuariosPost );
 router.delete('/:id', [
     validarJwt, // si pasamos una nueva propiedad en la request, los siguientes middleware tendran esa propiedad o atributo
-    esAdminRole,
+    // esAdminRole,
+    tieneRole('ADMIN_ROLE', 'VENTAS_ROLE'),
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom( ( id ) => existeUsuarioById( id ) ),
     validarCampos

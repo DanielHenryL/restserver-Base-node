@@ -52,13 +52,15 @@ const usuariosPost= async( req = request, res = response ) => {
 const usuariosDelete = async( req = request, res = response ) => {
 
     const { id } = req.params;
+    const uid = req.uid; 
+    
     // borrar usuario de la base de datos
     // const usuario = await Usuario.findByIdAndDelete(id);
 
     // cambiar estado sin eleminar el usuario
     const usuario = await Usuario.findByIdAndUpdate( id, { estado: false }, { new:true })
 
-    res.json(usuario);
+    res.json({usuario, uid});
 }
 
 module.exports = {

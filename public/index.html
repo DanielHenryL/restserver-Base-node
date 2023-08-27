@@ -29,7 +29,21 @@
            // const responsePayload = decodeJwtResponse(response.credential);
 
            // Google Token: ID_token
-            console.log( 'id_token', response.credential );
+            const body = { id_token:response.credential }
+
+            fetch('http://localhost:8080/api/auth/google',{
+                  method:'POST',
+                  headers:{
+                     'Content-type':'application/json'
+                  },
+                  body: JSON.stringify(body)
+               })
+               .then( resp => resp.json() )
+               .then( resp => {
+                  console.log(resp)
+               })
+               .catch( console.warn())
+
            // console.log("ID: " + responsePayload.sub);
            // console.log('Full Name: ' + responsePayload.name);
            // console.log('Given Name: ' + responsePayload.given_name);

@@ -3,9 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso denegado</title>
+    <title>Google Sign in </title>
 </head>
 <body>
-    <h1>Acceso denegado</h1>
+    <h1>Google Sign in</h1>
+    <hr>
+    <div id="g_id_onload"
+         data-client_id="236349452083-i47opu48i3lpn7uuvlchncev22043ptu.apps.googleusercontent.com"
+         data-auto_prompt="false"
+         data-callback="handleCredentialResponse">  <!-- llama la funcion cuando se realiza la autenticacion de forma exitoa -->
+      </div>
+      <div class="g_id_signin"
+         data-type="standard"
+         data-size="large"
+         data-theme="outline"
+         data-text="sign_in_with"
+         data-shape="rectangular"
+         data-logo_alignment="left">
+      </div>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        function handleCredentialResponse(response) {
+           // decodeJwtResponse() is a custom function defined by you
+           // to decode the credential response.
+           // const responsePayload = decodeJwtResponse(response.credential);
+
+           // Google Token: ID_token
+            console.log( 'id_token', response.credential );
+           // console.log("ID: " + responsePayload.sub);
+           // console.log('Full Name: ' + responsePayload.name);
+           // console.log('Given Name: ' + responsePayload.given_name);
+           // console.log('Family Name: ' + responsePayload.family_name);
+           // console.log("Image URL: " + responsePayload.picture);
+           // console.log("Email: " + responsePayload.email);
+        }
+      </script>
 </body>
 </html>

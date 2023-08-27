@@ -56,9 +56,36 @@ const googleSignIn = async( req = request, res = response ) =>{
 
         const { nombre ,img ,correo } = await googleVerify(id_token);
 
+        let usuario = await Usuario.findOne({ correo });
+
+        // crear usuario de google
+        if ( !usuario ) {
+            const data = {
+                nombre,
+                correo,
+                img,
+                rol:'USER_ROLE',
+                password:':p',
+                google:true
+            }
+
+            usuario = new Usuario( data );
+            usuario.save();
+        }
+
+        // si el usuario en bd esta estado:false
+        if ( !usuario.estado ) {
+            return res.status(401).json({
+                msg:'Hable con el administrador, usuario bloqueado'
+            })
+        }
+
+        // generar el JWT
+        const token = await generarJWT( usuario.id );
+
         res.json({
-            msg:'Todo ok',
-            id_token
+            usuario,
+            token
         })
 
     } catch (error) {

@@ -1,16 +1,31 @@
 const { request, response } = require('express');
 const { Categoria } = require('../models');
 
+//* Obtener todas las categorias - paginar - total - informacion de quien creo la categoria
+const categoriasGet = async( req = request, res = response ) =>{
+    const { limit = 10, desde } =req.query;
 
-const categoriasGet = ( req = request, res = response ) =>{
+    const [ total, categorias ] = await Promise.all([
+        Categoria.countDocuments({ estado:true }),
+        Categoria.find({ estado:true })
+            .limit( limit )
+            .skip( desde )
+            .populate('usuario','nombre'),     
+            // .populate({ path:'usuario', select:['nombre','correo']}), //*  algunos campos especifico primera forma    
+            // .populate('usuario','nombre correo'),  //* algunos campos especificos segunda forma
+    ])
     return res.json({
-        msg:'Get'
+        total,
+        categorias,
     })
 }
-const categoriaGet = ( req = request, res = response ) =>{
-    return res.json({
-        msg:'Get - id'
-    })
+const categoriaGet = async( req = request, res = response ) =>{
+    const { id } = req.params;
+    const categoria = await Categoria.findById( id )
+        .populate('usuario');
+    return res.json(
+        categoria
+    )
 }
 const categoriaPost = async( req = request, res = response ) =>{
     // guardar el nombre de la categoria en mayuscula
@@ -37,14 +52,26 @@ const categoriaPost = async( req = request, res = response ) =>{
         categoria
     })
 }
-const categoriaPut = ( req = request, res = response ) =>{
-    return res.json({
-        msg:'Put'
-    })
+const categoriaPut = async( req = request, res = response ) =>{
+    const { id } = req.params;
+    
+    //* sacamos al usuario, x si me estan mandando un usuario no coicidente con el cambio
+    const { usuario, ...resto } = req.body;
+
+    resto.nombre = resto.nombre.toUpperCase();
+    resto.usuario = req.usuario._id;
+
+    const categoria = await Categoria.findByIdAndUpdate( id, resto, { new: true } )
+    return res.json(
+        categoria
+    )
 }
-const categoriaDelete = ( req = request, res = response ) =>{
+const categoriaDelete = async( req = request, res = response ) =>{
+    const { id } = req.params;
+    const categoria = await Categoria.findByIdAndUpdate( id , {estado:false}, {new:true} );
+
     return res.json({
-        msg:'Delete'
+        categoria
     })
 }
 

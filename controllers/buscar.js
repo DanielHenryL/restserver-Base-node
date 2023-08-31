@@ -12,11 +12,33 @@ const coleccionesPermitidas = [
 const buscarUsuario = async( termino = '', res = response ) => {
     const esMongoID = ObjectId.isValid( termino );
     if ( esMongoID ) {
+
         const usuario = await Usuario.findById( termino );
-        res.json({
+
+        return res.json({
             result:( usuario ) ? [ usuario ]: []  
         });
-    }
+
+    } 
+
+    const regex = new RegExp( termino, 'i' )
+
+    const [ usuario, total ] = await Promise.all([
+        Usuario.find({ 
+            $or:[ { nombre: regex }, { correo: regex }],
+            $and:[ { estado:true }]
+        }),
+        Usuario.countDocuments({ 
+            $or:[ { nombre: regex }, { correo: regex }],
+            $and:[ { estado:true }]
+        }),
+    ])
+
+    return res.json({
+        total,
+        result: usuario
+    });
+
 }
 
 

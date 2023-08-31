@@ -8,7 +8,7 @@ const router = Router();
 // Obtener todas las categorias
 router.get('/', categoriasGet);
 
-// Obtener todas las categorias
+// Obtener todas las categorias por id
 router.get('/:id',[
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom( (id) => existeCategoriaById( id )),
@@ -19,6 +19,7 @@ router.get('/:id',[
 router.post('/',[
     validarJwt,
     check('nombre','El nombre es obligatorio').notEmpty(),
+    check('nombre').custom( ( nombre ) => existeCategoriaBD( nombre )),
     validarCampos
 ], categoriaPost);
 

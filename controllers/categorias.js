@@ -30,15 +30,6 @@ const categoriaGet = async( req = request, res = response ) =>{
 const categoriaPost = async( req = request, res = response ) =>{
     // guardar el nombre de la categoria en mayuscula
     const nombre = req.body.nombre.toUpperCase();
-    // verificar si no hay duplicado
-    const categoriaDB = await Categoria.findOne({ nombre });
-
-    // validar si la categoria existe en la BD
-    if ( categoriaDB ) {
-        return res.status(400).json({
-            msg:`La categoria ${ categoriaDB.nombre } ya existe en la base de datos`
-        })
-    }
     // Generar la data a guardar
     const data = {
         nombre,

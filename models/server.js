@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
 const { dbConnetion } = require('../database/config');
 
 
@@ -35,7 +36,11 @@ class Server {
         this.app.use( express.json() );
         // directorio público
         this.app.use( express.static('public') );
-        
+        //Fileupload - Carga de archivos
+        this.app.use(fileUpload({
+            useTempFiles : true,
+            tempFileDir : '/tmp/'
+        }));
     }
     routes() {
         this.app.use( this.paths.auth , require('../routes/auth' ));

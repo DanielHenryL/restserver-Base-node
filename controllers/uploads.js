@@ -19,7 +19,16 @@ const cargarArchivo = async( req = request, res = response ) =>{
     }
 }
 
+const actualizarArchivo = async( req = request, res = response ) =>{
+    const { id, coleccion} = req.params;
+    res.json({
+        msg:'actualizar archivo',
+        id,
+        coleccion
+    })
+}
 
 module.exports = {
-    cargarArchivo
+    cargarArchivo,
+    actualizarArchivo
 }

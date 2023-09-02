@@ -48,6 +48,14 @@ const existeProductoByID = async( id ) => {
         throw new Error(`El producto con id:${ id } no existe`);
     }
 }
+//* Cargar archivos
+const coleccionPermitidas = ( coleccion = '', colecciones = [] ) =>{
+    if ( !colecciones.includes( coleccion ) ) {
+        throw new Error(`La coleccion ${ coleccion } no esta permitida,${ colecciones }`)
+    }
+    return true;
+}
+
 
 module.exports = {
     isRoleValid,
@@ -56,5 +64,6 @@ module.exports = {
     existeCategoriaById,
     existeCategoriaBD,
     existeProductoBD,
-    existeProductoByID
+    existeProductoByID,
+    coleccionPermitidas
 }

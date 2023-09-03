@@ -1,18 +1,18 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { validarCampos } = require('../middlewares/validar-campos');
 const { cargarArchivo, actualizarArchivo } = require('../controllers/uploads');
-const { coleccionPermitidas, existeUsuarioById } = require('../helpers');
+const { coleccionPermitidas, existeUsuarioOrproductoById } = require('../helpers');
+const { validarArchivoSubir, validarCampos } = require('../middlewares');
 
 
 const router = Router();
 
 router.post('/', cargarArchivo );
 router.put('/:coleccion/:id',[
+    validarArchivoSubir,
     check('id','No es un ID de mongo validó').isMongoId(),
-    check('id').custom( existeUsuarioById ),
-    check('coleccion').custom( ( coleccion ) => coleccionPermitidas( coleccion, ['usuario','producto'] )),
+    check('coleccion').custom( ( coleccion ) => coleccionPermitidas( coleccion, ['usuarios','productos'] )),
     // check('coleccion','No esta en la coleccion').isIn( ['usuario','producto'] ), //*otra forma de validarlo
     validarCampos
 ], actualizarArchivo)

@@ -65,5 +65,5 @@ module.exports = {
     existeCategoriaBD,
     existeProductoBD,
     existeProductoByID,
-    coleccionPermitidas
+    coleccionPermitidas,
 }

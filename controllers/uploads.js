@@ -1,3 +1,5 @@
+const path = require('path');
+const fs = require('fs');
 const { request, response } = require("express");
 const { subirArchivo } = require("../helpers");
 const { Usuario, Producto } = require("../models");
@@ -38,6 +40,12 @@ const actualizarArchivo = async( req = request, res = response ) =>{
         });
     } 
 
+    if ( modelo.img ) {
+        const pathImagen = path.join( __dirname, '../uploads', coleccion, modelo.img );
+        if( fs.existsSync(pathImagen) ){
+            fs.unlinkSync(pathImagen)
+        }
+    }
     modelo.img = await subirArchivo( req.files, ['png','jpg','jpeg'], coleccion );
 
     await modelo.save();

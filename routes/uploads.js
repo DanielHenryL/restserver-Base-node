@@ -8,7 +8,10 @@ const { validarArchivoSubir, validarCampos } = require('../middlewares');
 
 const router = Router();
 
-router.post('/', cargarArchivo );
+router.post('/',[
+    validarArchivoSubir,
+    validarCampos
+], cargarArchivo );
 router.put('/:coleccion/:id',[
     validarArchivoSubir,
     check('id','No es un ID de mongo validó').isMongoId(),
